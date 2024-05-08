@@ -1,5 +1,4 @@
-import "./Formulario.css"
-import { useState } from "react"
+import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
 export function Formulario({ setUser }) {
@@ -37,34 +36,40 @@ export function Formulario({ setUser }) {
   };
 
   return (
-    <section>
-  <h1>Log in</h1>
-  <div className="formulario-container">
-    <form
-      className="formulario"
-      onSubmit={handleSubmit}
-    >
-      <input
-        type="text"
-        value={usuario}
-        onChange={e => setUsuario(e.target.value)}
-        placeholder="Usuario"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        placeholder="Contraseña"
-      />
-      <button>Iniciar Sesion</button>
-      <button className="crear-cuenta" onClick={handleClick}>Cree su cuenta</button>
-  {error && <p className="error-message">Todos los campos son obligatorios</p>}
-  {errorAutenticacion && <p className="error-message">Usuario y/o contraseña incorrectos</p>}
-    </form>
-  </div>
-</section>
-
-    
+    <section className="d-flex justify-content-center align-items-center my-5">
+      <div className="card">
+        <div className="card-body">
+          <div className="form-group">
+            <h1>Inicio de Sesión</h1>
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <input
+                  className="form-control mb-3"
+                  type="text"
+                  value={usuario}
+                  onChange={e => setUsuario(e.target.value)}
+                  placeholder="Usuario"
+                  required
+                />
+                <input
+                  className="form-control mb-3"
+                  type="password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="Contraseña"
+                  required
+                />
+              </div>
+              <div className="d-flex justify-content-center">
+                <button className="btn btn-primary mx-1">Enviar</button>
+                <button className="btn btn-primary" onClick={handleClick}>Crear cuenta</button>
+              </div>
+              {error && <p className="text-danger">Todos los campos son obligatorios</p>}
+              {errorAutenticacion && <p className="text-danger">Usuario y/o contraseña incorrectos</p>}
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
-

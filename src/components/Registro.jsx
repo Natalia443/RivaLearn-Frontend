@@ -1,37 +1,59 @@
 import React from 'react';
+import userService from '../service/userService';
 
 export function Registro() {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    try {
+      await userService.saveUser(username, password, email);
+    } catch (error) {
+      console.error('Error saving user:', error);
+    }
+  };
   return (
-    <div>
-      <h2>Registro de Usuario</h2>
-      <form>
-        <div>
-          <label htmlFor="username">Nombre de Usuario:</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-          />
+    <section className="d-flex justify-content-center align-items-center my-5">
+      <div className="card">
+        <div className="card-body">
+          <div className="form-group">
+            <h1>Registro de Usuario</h1>
+            <form onSubmit={handleSubmit}>
+              <div>
+                <input
+                  className="form-control mb-3"
+                  placeholder='Nombre de Usuario'
+                  type="text"
+                  id="username"
+                  name="username"
+                />
+              </div>
+              <div>
+                <input
+                  className="form-control mb-3"
+                  placeholder='Correo Electrónico'
+                  type="email"
+                  id="email"
+                  name="email"
+                />
+              </div>
+              <div>
+                <input
+                  className="form-control mb-3"
+                  placeholder='Contraseña'
+                  type="password"
+                  id="password"
+                  name="password"
+                />
+              </div>
+              <button type="submit" className="btn btn-primary">Enviar</button>
+            </form>
+          </div>
         </div>
-        <div>
-          <label htmlFor="email">Correo Electrónico:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Contraseña:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-          />
-        </div>
-        <button type="submit">Registrarse</button>
-      </form>
-    </div>
+      </div>
+    </section>
   );
 };
 
