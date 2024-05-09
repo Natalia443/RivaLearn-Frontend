@@ -21,7 +21,7 @@ function App() {
             <div className="collapse navbar-collapse" id="navbarNav">
               <ul className="navbar-nav">
                 <li className="nav-item">
-                  <Link to="/registro" className="nav-link">Registro</Link>
+                  {/* <Link to="/registro" className="nav-link">Registro</Link> */}
                 </li>
               </ul>
             </div>
