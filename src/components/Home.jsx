@@ -1,7 +1,8 @@
-
+import Cookies from "js-cookie";
 export function Home({ user, setUser }) {
 
     const handleLogOut = () => {
+        Cookies.remove("access_token");
         setUser([]);
     }
 

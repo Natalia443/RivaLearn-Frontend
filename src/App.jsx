@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Link  } from 'react-router-dom';
 import React from 'react';
-import { Formulario } from './components/Formulario';
+import { LoginForm } from './components/Login';
 import { Home } from './components/Home';
 import { Registro } from './components/Registro';
 import { useState } from 'react';
@@ -29,7 +29,7 @@ function App() {
         </nav>
 
         <Routes>      
-          <Route path="/" element={!user.length > 0 ? <Formulario setUser={setUser}/> : <Home user={user} setUser={setUser} />} />
+          <Route path="/" element={!user.length > 0 ? <LoginForm setUser={setUser}/> : <Home user={user} setUser={setUser} />} />
           <Route path="/registro" element={<Registro />} />
         </Routes>
       </Router>

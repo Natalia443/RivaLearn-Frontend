@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const client = axios.create({
   baseURL: "https://rivalearn-backend.onrender.com/api/users",
@@ -15,6 +16,22 @@ export default {
       return user;
     } catch (error) {
       throw "Error al guardar el usuario";
+    }
+  },
+
+  async login(usernameInput, passwordInput) {
+    try {
+      const response = await client.post("/login", {
+        username: usernameInput,
+        password: passwordInput,
+      });
+      const { access_token, refresh_token, username } = response.data;
+      Cookies.set("access_token", access_token, { expires: 1 / 24 });
+      Cookies.set("refresh_token", refresh_token, { expires: 7 });
+      Cookies.set("username", username);
+      return { username: username };
+    } catch (error) {
+      throw "Error al iniciar sesion";
     }
   },
 };

@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import userService from '../service/userService';
 
 export function Registro() {
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const username = document.getElementById('username').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
 
     try {
       await userService.saveUser(username, password, email);
@@ -14,6 +17,7 @@ export function Registro() {
       console.error('Error saving user:', error);
     }
   };
+
   return (
     <section className="d-flex justify-content-center align-items-center my-5">
       <div className="card">
@@ -26,7 +30,8 @@ export function Registro() {
                   className="form-control mb-3"
                   placeholder='Nombre de Usuario'
                   type="text"
-                  id="username"
+                  value={username}
+                  onChange={e => setUsername(e.target.value)}
                   name="username"
                 />
               </div>
@@ -35,7 +40,8 @@ export function Registro() {
                   className="form-control mb-3"
                   placeholder='Correo Electrónico'
                   type="email"
-                  id="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
                   name="email"
                 />
               </div>
@@ -44,7 +50,8 @@ export function Registro() {
                   className="form-control mb-3"
                   placeholder='Contraseña'
                   type="password"
-                  id="password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
                   name="password"
                 />
               </div>
