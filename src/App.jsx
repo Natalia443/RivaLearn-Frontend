@@ -4,6 +4,7 @@ import { LoginForm } from './components/Login';
 import { Home } from './components/Home';
 import { Registro } from './components/Registro';
 import { useState } from 'react';
+import { Diccionario } from './components/Diccionario'
 
 
 function App() {
@@ -21,7 +22,7 @@ function App() {
             <div className="collapse navbar-collapse" id="navbarNav">
               <ul className="navbar-nav">
                 <li className="nav-item">
-                  {/* <Link to="/registro" className="nav-link">Registro</Link> */}
+                   <Link to="/Diccionario" className="nav-link">Diccionario</Link> 
                 </li>
               </ul>
             </div>
@@ -31,6 +32,7 @@ function App() {
         <Routes>      
           <Route path="/" element={!user.length > 0 ? <LoginForm setUser={setUser}/> : <Home user={user} setUser={setUser} />} />
           <Route path="/registro" element={<Registro />} />
+          <Route path="/Diccionario" element={<Diccionario />} />
         </Routes>
       </Router>
     </div>
