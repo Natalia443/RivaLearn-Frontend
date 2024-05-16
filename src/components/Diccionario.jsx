@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+
 export function Diccionario(){
   const [language, setLanguage] = useState('en'); 
   const [word, setWord] = useState('');
@@ -36,6 +37,7 @@ export function Diccionario(){
         
             setDefinitions(newDefinitions);
             setError(null);
+
           } else {
             setDefinitions([]);
             setError('La palabra no fue encontrada en el diccionario');
@@ -54,27 +56,28 @@ export function Diccionario(){
     <section className="d-flex justify-content-center align-items-center my-5">
     <div>
       <h1>Buscador de Diccionario</h1>
-      <div>
-        <label htmlFor="language">Idioma:</label>
-        <select className ="form-select" aria-label="Default select example" id="language" value={language} onChange={handleLanguageChange}>
-          <option value="en">English</option>
-          <option value="es">Español</option>
-          <option value="it">Italiano</option>
-          <option value="fr">Français</option>
-          <option value="pr">Portugues</option>
-        </select>
+        <div>
+          <label htmlFor="language">Idioma:</label>
+          <select className ="form-select" id="language" value={language} onChange={handleLanguageChange}>
+            <option value="en">🇬🇧 English</option>
+            <option value="es">🇪🇸 Español</option> 
+            <option value="it">🇮🇹 Italiano</option>
+            <option value="fr">🇫🇷 Français</option>
+            <option value="pr">🇵🇹 Portugues</option>
+          </select>
       </div>
       <div>
         <label htmlFor="word">Palabra:</label>
         <input  className="form-control mb-3" type="text" id="word" value={word} onChange={handleWordChange} />
       </div>
       <button className="btn btn-primary" onClick={search}>Buscar</button>
+      <hr class="border border-danger border-2 opacity-50"></hr>
       {error && <p>{error}</p>}
-      <ul>
+      <ul className="list-group">
           {definitions.map((definition, index) => (
-            <li key={index}>{definition}</li>
+            <li className="list-group-item" key={index}>{definition}</li>
           ))}
-        </ul>
+      </ul>
     </div>
     </section>
   );
