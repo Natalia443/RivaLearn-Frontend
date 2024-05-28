@@ -5,7 +5,7 @@ const VistaTextos = ({ bookData }) => {
   const [bookContent, setBookContent] = useState(null);
   const [bookText, setBookText] = useState(null);
 
-  const backendUrl = 'http://localhost:3001/api/lib/text';
+  const backendUrl = 'https://rivalearn-backend.onrender.com/api/lib/text';
 
   const resetBookContent = () => {
     setBookContent(null);

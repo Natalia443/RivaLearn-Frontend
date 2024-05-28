@@ -7,7 +7,6 @@ const TextosPredet = () => {
   const [languages, setLanguages] = useState([]);
 
   useEffect(() => {
-    // Cargar el JSON de lenguajes
     fetch('/lang.json')
       .then(response => response.json())
       .then(data => setLanguages(data))
@@ -15,13 +14,11 @@ const TextosPredet = () => {
   }, []);
 
   const handleReadClick = (languageCode) => {
-    // Realiza una solicitud a la API con el código del lenguaje seleccionado
-    fetch(`https://gutendex.com/books/?topic=children&languages=${languageCode}`, {
-      method: 'GET', // Puedes ajustar el método HTTP según sea necesario
+    fetch(`https://rivalearn-backend.onrender.com/api/lib/books?code=${languageCode}`, {
+      method: 'GET',
     })
       .then(response => response.json())
       .then(data => {
-        // Maneja la respuesta de la API aquí
         setData(data);
         console.log('Respuesta de la API:', data);
       })
