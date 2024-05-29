@@ -1,14 +1,19 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { LoginForm } from './components/Login';
 import { Home } from './components/Home';
 import { Registro } from './components/Registro';
 import { Diccionario } from './components/Diccionario';
 import TextosPredet from './components/TextosPredet';
+import { Decks } from './components/Decks';
+import { Contexto } from './context/contexto.jsx';
+
 
 function App() {
   const [user, setUser] = useState([]);
+  const { autenticado, setAutenticado } = useContext(Contexto);
+  
 
   return (
     <div className='App'>
@@ -27,20 +32,27 @@ function App() {
                 <li className="nav-item">
                   <Link to="/Leer" className="nav-link">Leer</Link>
                 </li>
+                {autenticado && ( 
+                  <li className="nav-item">
+                    <Link to="/Decks" className="nav-link">Decks</Link>
+                  </li>
+                )}
               </ul>
             </div>
           </div>
         </nav>
-
+  
         <Routes>      
           <Route path="/" element={!user.length ? <LoginForm setUser={setUser}/> : <Home user={user} setUser={setUser} />} />
           <Route path="/registro" element={<Registro />} />
           <Route path="/Diccionario" element={<Diccionario />} />
           <Route path="/Leer" element={<TextosPredet />} />
+          <Route path="/Decks" element={<Decks />} />
         </Routes>
       </Router>
     </div>
   );
+  
 }
 
 export default App;

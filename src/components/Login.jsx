@@ -1,24 +1,32 @@
-import { useState, useEffect  } from "react";
+import { useState, useEffect } from "react";
+import React, { useContext } from 'react';
+import { Contexto } from '../context/contexto.jsx';
 import { useNavigate } from 'react-router-dom';
 import client from '../service/userService.js'; 
 import Cookies from "js-cookie";
 
 export function LoginForm({ setUser }) {
+  const { autenticado, setAutenticado } = useContext(Contexto);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
+  console.log('Valor de autenticado desde el contexto:', autenticado);
+
   useEffect(() => {
     const accessToken = Cookies.get("access_token");
     const username = Cookies.get("username");
-    
+
     if (accessToken && username) {
       setUser(username); 
       navigate('/');
     }
-  }, [navigate, setUser]);
+
+  
+    console.log('useEffect - Valor de autenticado desde el contexto:', autenticado);
+  }, [navigate, setUser, autenticado]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,6 +42,7 @@ export function LoginForm({ setUser }) {
     try {
       const response = await client.login(username, password);
       setUser(response.username); 
+      setAutenticado(true); // Cambiar el estado de autenticado en el contexto
       navigate('/');
     } catch (error) {
       setErrorMessage("Usuario y/o contraseña incorrectos");
