@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const client = axios.create({
-  baseURL: "https://rivalearn-backend.onrender.com/api/users",
+  baseURL: "https://rivalearn-backend.onrender.com/api/",
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
@@ -12,7 +12,7 @@ const client = axios.create({
 export default {
   async saveUser(username, password, email) {
     try {
-      const user = await client.post("/signup", { username, password, email });
+      const user = await client.post("users/signup", { username, password, email });
       return user;
     } catch (error) {
       throw "Error al guardar el usuario";
@@ -21,7 +21,7 @@ export default {
 
   async login(usernameInput, passwordInput) {
     try {
-      const response = await client.post("/login", {
+      const response = await client.post("users/login", {
         username: usernameInput,
         password: passwordInput,
       });
@@ -35,4 +35,48 @@ export default {
       throw "Error al iniciar sesion";
     }
   },
+
+  async getUserDecks() {
+    try {
+      const user_id = Cookies.get("user_id");
+      if (!user_id) {
+        throw "No se encontró el user_id en las cookies";
+      }
+      const response = await client.get(`decks/get/${user_id}`);
+      return response.data;
+    } catch (error) {
+      throw "Error al obtener los decks del usuario";
+    }
+  },
+
+  async createDeck(deckName) {
+    try {
+      const user_id = Cookies.get("user_id");
+      if (!user_id) {
+        throw "No se encontró el user_id en las cookies";
+      }
+      const response = await client.post(`decks/create`, {
+        userId: user_id,
+        deckname: deckName,
+      });
+      return response.data;
+    } catch (error) {
+      throw "Error al crear el deck";
+    }
+  },
+
+  async getDeckFlashCards(deckId) {
+    try {
+      if (!deckId) {
+        throw "No se encontró el user_id en las cookies";
+      }
+      const response = await client.get(`flashcards/get/${deckId}`);
+      return response.data;
+    } catch (error) {
+      throw "Error al obtener los decks del usuario";
+    }
+  },
+
+
 };
+

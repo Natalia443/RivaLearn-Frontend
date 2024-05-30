@@ -42,7 +42,7 @@ export function LoginForm({ setUser }) {
     try {
       const response = await client.login(username, password);
       setUser(response.username); 
-      setAutenticado(true); // Cambiar el estado de autenticado en el contexto
+      setAutenticado(true); 
       navigate('/');
     } catch (error) {
       setErrorMessage("Usuario y/o contraseña incorrectos");

@@ -6,8 +6,9 @@ import { Home } from './components/Home';
 import { Registro } from './components/Registro';
 import { Diccionario } from './components/Diccionario';
 import TextosPredet from './components/TextosPredet';
-import { Decks } from './components/Decks';
+import  Decks  from './components/Decks';
 import { Contexto } from './context/contexto.jsx';
+import { FlashCards } from './components/FlashCards.jsx'
 
 
 function App() {
@@ -31,12 +32,10 @@ function App() {
                 </li>
                 <li className="nav-item">
                   <Link to="/Leer" className="nav-link">Leer</Link>
-                </li>
-                {autenticado && ( 
+                </li> 
                   <li className="nav-item">
                     <Link to="/Decks" className="nav-link">Decks</Link>
                   </li>
-                )}
               </ul>
             </div>
           </div>
@@ -48,6 +47,7 @@ function App() {
           <Route path="/Diccionario" element={<Diccionario />} />
           <Route path="/Leer" element={<TextosPredet />} />
           <Route path="/Decks" element={<Decks />} />
+          <Route path="/flashcards" element={<FlashCards />} />
         </Routes>
       </Router>
     </div>
