@@ -21,9 +21,9 @@ export function UserDecks(){
     }
   };
 
- /* const handleAccessDeck = (deckId) =>{
-    navigate('/flashcards', { state : { deck_id : deckId }})
-  } */
+  const handleAccessFlashCard = (deckId) =>{
+    navigate('/flashcards', { state : { deckId } });
+  };
 
   const handleCreateDeck = async (e) => {
     e.preventDefault();
@@ -73,9 +73,9 @@ export function UserDecks(){
                 <h5 className="card-title">{deck.name}</h5>
                 <div className="mt-auto">
                   <button className="btn btn-primary"
-                  /*onClick={handleAccessDeck(deck.deck_id)}*/
-                  >
-                    Acceder al deck</button>
+                    onClick={() => handleAccessFlashCard(deck.deck_id)}>
+                      Acceder al deck
+                  </button>
                 </div>
               </div>
             </div>
@@ -84,6 +84,6 @@ export function UserDecks(){
       </div>
     </div>
   );
-};
+}
 
 export default UserDecks;

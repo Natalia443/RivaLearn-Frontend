@@ -67,15 +67,21 @@ export default {
 
   async getDeckFlashCards(deckId) {
     try {
-      if (!deckId) {
-        throw "No se encontró el user_id en las cookies";
-      }
-      const response = await client.get(`flashcards/get/${deckId}`);
-      return response.data;
+        if (!deckId) {
+            throw new Error("No se encontró el deckId");
+        }
+        
+        const response = await client.get(`flashcards/get/${deckId}`);
+        
+        if (response.status !== 200) {
+            throw new Error("Error en la solicitud de flashcards");
+        }
+
+        return response.data;
     } catch (error) {
-      throw "Error al obtener los decks del usuario";
+        throw new Error(`Error al obtener los flashcards: ${error.message}`);
     }
-  },
+}
 
 
 };
