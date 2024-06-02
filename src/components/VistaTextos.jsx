@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import DOMPurify from 'dompurify';
 
 const VistaTextos = ({ bookData }) => {
   const [bookContent, setBookContent] = useState(null);
@@ -11,17 +12,18 @@ const VistaTextos = ({ bookData }) => {
     setBookContent(null);
   };
   
-  
   const handleBookContent = async (book) => {
     try {
       const url = book.formats['text/html'];
       const response = await axios.get(backendUrl, { params: { url } });
-      setBookText(response.data);
+      const sanitizedContent = DOMPurify.sanitize(response.data);
+      setBookText(sanitizedContent);
       setBookContent(book);
     } catch (error) {
       console.error('Error fetching the book content:', error);
     }
   };
+  
   return (
     <div className="container">
       {bookContent ? (
