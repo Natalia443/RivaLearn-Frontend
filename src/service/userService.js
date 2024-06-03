@@ -81,6 +81,20 @@ export default {
     } catch (error) {
         throw new Error(`Error al obtener los flashcards: ${error.message}`);
     }
+},
+
+async createFlashcard(deckId, palabra, idioma, traduccion) {
+  try {
+    const response = await client.post(`flashcards/create`, {
+      deckId: deckId,
+      vocab: palabra,
+      sourceLang: idioma,
+      targetLang: traduccion,
+    });
+    return response.data;
+  } catch (error) {
+    throw "Error al crear la flashcard";
+  }
 }
 
 
