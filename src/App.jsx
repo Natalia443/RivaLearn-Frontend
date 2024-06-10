@@ -6,15 +6,13 @@ import { Home } from './components/Home';
 import { Registro } from './components/Registro';
 import { Diccionario } from './components/Diccionario';
 import TextosPredet from './components/TextosPredet';
-import  Decks  from './components/Decks';
+import Decks from './components/Decks';
 import { Contexto } from './context/contexto.jsx';
-import { FlashCards } from './components/FlashCards.jsx'
-
+import { FlashCards } from './components/FlashCards.jsx';
 
 function App() {
   const [user, setUser] = useState([]);
   const { autenticado, setAutenticado } = useContext(Contexto);
-  
 
   return (
     <div className='App'>
@@ -27,21 +25,25 @@ function App() {
             </button>
             <div className="collapse navbar-collapse" id="navbarNav">
               <ul className="navbar-nav">
-                <li className="nav-item">
-                  <Link to="/Diccionario" className="nav-link">Diccionario</Link>
-                </li>
-                <li className="nav-item">
-                  <Link to="/Leer" className="nav-link">Leer</Link>
-                </li> 
-                  <li className="nav-item">
-                    <Link to="/Decks" className="nav-link">Decks</Link>
-                  </li>
+                {autenticado && (
+                  <>
+                    <li className="nav-item">
+                      <Link to="/Diccionario" className="nav-link">Diccionario</Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link to="/Leer" className="nav-link">Leer</Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link to="/Decks" className="nav-link">Decks</Link>
+                    </li>
+                  </>
+                )}
               </ul>
             </div>
           </div>
         </nav>
-  
-        <Routes>      
+
+        <Routes>
           <Route path="/" element={!user.length ? <LoginForm setUser={setUser}/> : <Home user={user} setUser={setUser} />} />
           <Route path="/registro" element={<Registro />} />
           <Route path="/Diccionario" element={<Diccionario />} />
@@ -52,7 +54,7 @@ function App() {
       </Router>
     </div>
   );
-  
 }
 
 export default App;
+
