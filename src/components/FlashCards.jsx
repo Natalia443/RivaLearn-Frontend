@@ -7,6 +7,7 @@ import { useLocation } from 'react-router-dom';
 export  function FlashCards() {
     const [flashcards, setFlashcards] = useState([]);
     const [languages, setLanguages] = useState([]);
+    const [traduccion, setTraduccion] = useState([]);
     const { state  } = useLocation();
     const deckId = state ? state.deckId : null;
     const [loading, setLoading] = useState(true);
@@ -66,6 +67,10 @@ export  function FlashCards() {
       .then(response => response.json())
       .then(data => setLanguages(data))
       .catch(error => console.error('Error al cargar los lenguajes:', error));
+      fetch('/lang2.json')
+      .then(response => response.json())
+      .then(data2 => setTraduccion(data2))
+      .catch(error => console.error('Error al cargar los lenguajes:', error));
       fetchFlashCards();
     }, [fetchFlashCards]);
   
@@ -91,7 +96,7 @@ export  function FlashCards() {
         value={selectedTranslation !== null ? selectedTranslation : ""}
         onChange={handleTranslationChange}>
         <option value="" disabled >Traduccion</option>
-          {languages.map((traduccion, index) => (
+          {traduccion.map((traduccion, index) => (
             <option key={index} value={traduccion.code}>
               {traduccion.name}
             </option>
