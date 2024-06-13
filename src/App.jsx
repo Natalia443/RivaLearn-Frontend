@@ -9,6 +9,7 @@ import TextosPredet from './components/TextosPredet';
 import Decks from './components/Decks';
 import { Contexto } from './context/contexto.jsx';
 import { FlashCards } from './components/FlashCards.jsx';
+import DetalleFlashcard from './components/DetalleFlashcard';
 
 function App() {
   const [user, setUser] = useState([]);
@@ -50,6 +51,7 @@ function App() {
           <Route path="/Leer" element={<TextosPredet />} />
           <Route path="/Decks" element={<Decks />} />
           <Route path="/flashcards" element={<FlashCards />} />
+          <Route path="/flashcards/detail/:id" element={<DetalleFlashcard />} />
         </Routes>
       </Router>
     </div>

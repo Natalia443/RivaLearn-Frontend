@@ -2,7 +2,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const client = axios.create({
-  baseURL: "https://rivalearn-backend.onrender.com/api/",
+  /*baseURL: "https://rivalearn-backend.onrender.com/api/",*/
+  baseURL: "http://localhost:3001/api/",
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
@@ -95,8 +96,15 @@ async createFlashcard(deckId, palabra, idioma, traduccion) {
   } catch (error) {
     throw "Error al crear la flashcard";
   }
+}, 
+async getFlashcardById(flashcardId) {
+  try {
+    const response = await client.get(`flashcards/detail/${flashcardId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error al obtener los detalles de la flashcard: ${error.message}`);
+  }
 }
-
 
 };
 

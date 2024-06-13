@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import userService from "../service/userService.js"; 
-import { useLocation } from 'react-router-dom';
-
+import { useLocation, Link } from 'react-router-dom';
 
 
 export  function FlashCards() {
@@ -29,11 +28,21 @@ export  function FlashCards() {
       setWord(e.target.value);
     };
 
-    const handleSubmit = (deckId) => {
-      handleCreateFlashcard(deckId,  word, selectedLanguage, selectedTranslation);
-      setWord("");
-      setSelectedLanguage("");
-      setSelectedTranslation("");
+    const handleSubmit = async (deckId) => {
+      try {
+        if (!deckId || !word || !selectedLanguage || !selectedTranslation) {
+          alert("Complete todos los datos");
+          return;
+        }
+        await handleCreateFlashcard(deckId,  word, selectedLanguage, selectedTranslation);
+        setWord("");
+        setSelectedLanguage("");
+        setSelectedTranslation("");
+        await fetchFlashCards();
+      } catch (error) {
+        console.error("Error al manejar el envío del formulario:", error);
+        alert("Error al crear la flashcard");
+      }
     };
 
     const fetchFlashCards = useCallback(async () => {
@@ -80,7 +89,7 @@ export  function FlashCards() {
         <select 
         className="form-select me-2" 
         style={{ width: 'auto' }}
-        value={selectedLanguage !== null ? selectedLanguage : ""}
+        value={selectedLanguage || ""}
         onChange={handleLanguageChange}
         >
         <option value="" disabled >Idioma</option>
@@ -93,7 +102,7 @@ export  function FlashCards() {
         <select 
         className="form-select me-2" 
         style={{ width: 'auto' }}
-        value={selectedTranslation !== null ? selectedTranslation : ""}
+        value={selectedTranslation || ""}
         onChange={handleTranslationChange}>
         <option value="" disabled >Traduccion</option>
           {traduccion.map((traduccion, index) => (
@@ -107,7 +116,7 @@ export  function FlashCards() {
           className="form-control me-2"
           placeholder="Palabra"
           style={{ width: 'auto' }}
-          value={word !== null ? word : ""}
+          value={word || ""}
           onChange={handleWordChange}
         />
         <button 
@@ -123,6 +132,7 @@ export  function FlashCards() {
             <div className="card" style={{ marginLeft: '0.5rem', marginRight: '0.5rem' }}>
               <div className="card-body d-flex flex-column">
                 <h5 className="card-title">{flashcard.vocab}</h5>
+                <Link to={`/flashcards/detail/${flashcard.id}`} className="btn btn-secondary mt-auto">Detalles</Link>
               </div>
             </div>
           </div>
