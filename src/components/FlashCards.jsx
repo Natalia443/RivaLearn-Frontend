@@ -9,11 +9,13 @@ export  function FlashCards() {
     const [traduccion, setTraduccion] = useState([]);
     const { state  } = useLocation();
     const deckId = state ? state.deckId : null;
+    const deckName = state ? state.deckName : null;
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedLanguage, setSelectedLanguage] = useState('');
     const [selectedTranslation, setSelectedTranslation] = useState('');
     const [word, setWord] = useState('');
+    const [historia, setHistoria] = useState(null);
 
     
     const handleLanguageChange = (e) => {
@@ -27,6 +29,21 @@ export  function FlashCards() {
     const handleWordChange = (e) => {
       setWord(e.target.value);
     };
+
+    const handleGoBack = () => {
+      setHistoria(null);
+    };
+
+    
+  const handleCrearHistoria = async (flashcards) => {
+    try {
+      const story = await userService.createStory(flashcards);
+      setHistoria(story);
+      console.log("Historia creada:", story);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
 
     const handleSubmit = async (deckId) => {
       try {
@@ -54,7 +71,7 @@ export  function FlashCards() {
         } finally {
           setLoading(false);
         }
-    }, [deckId]);
+    }, [deckId]); 
 
     const handleCreateFlashcard = async (deckId, palabra, idioma, traduccion) => {
       if (!deckId || !palabra || !idioma || !traduccion ) {
@@ -84,47 +101,73 @@ export  function FlashCards() {
     }, [fetchFlashCards]);
   
     return (
-      <div className="container">
-      <div className="d-flex justify-content-end mb-4 mt-2">
-        <select 
-        className="form-select me-2" 
-        style={{ width: 'auto' }}
-        value={selectedLanguage || ""}
-        onChange={handleLanguageChange}
-        >
-        <option value="" disabled >Idioma</option>
-          {languages.map((idioma, index) => (
-            <option key={index} value={idioma.code}>
-              {idioma.name}
-            </option>
-          ))}
-        </select>
-        <select 
-        className="form-select me-2" 
-        style={{ width: 'auto' }}
-        value={selectedTranslation || ""}
-        onChange={handleTranslationChange}>
-        <option value="" disabled >Traduccion</option>
-          {traduccion.map((traduccion, index) => (
-            <option key={index} value={traduccion.code}>
-              {traduccion.name}
-            </option>
-          ))}
-        </select>
-        <input
-          type="text"
-          className="form-control me-2"
-          placeholder="Palabra"
-          style={{ width: 'auto' }}
-          value={word || ""}
-          onChange={handleWordChange}
-        />
+    <div className="container">
+    {historia ? (
+      <div style={{ width: '100%' }}>
+       <p style={{ fontSize: '1.5rem' }}>{historia}</p>
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <button 
+            type="button" 
+            className="btn btn-danger" 
+            onClick={handleGoBack}>
+            Volver Atrás
+          </button>
+        </div>
+      </div>
+    ) : (
+    <div>
+      <div style={{ textAlign: 'center', margin: '20px 0' }}>
+            <h2>{deckName}</h2>
+      </div>
+      <div className="d-flex justify-content-between align-items-center mb-4 mt-2">
         <button 
-        type="submit" 
-        className="btn btn-primary"
-        onClick={() => handleSubmit(deckId)}>
-          +
+          type="button" 
+          className="btn btn-primary me-2" 
+          onClick={() => handleCrearHistoria(flashcards)}>
+          Crear Historia
         </button>
+        <div className="d-flex">
+          <select 
+            className="form-select me-2" 
+            style={{ width: 'auto' }}
+            value={selectedLanguage || ""}
+            onChange={handleLanguageChange}
+          >
+            <option value="" disabled>Idioma</option>
+            {languages.map((idioma, index) => (
+              <option key={index} value={idioma.code}>
+                {idioma.name}
+              </option>
+            ))}
+          </select>
+          <select 
+            className="form-select me-2" 
+            style={{ width: 'auto' }}
+            value={selectedTranslation || ""}
+            onChange={handleTranslationChange}
+          >
+            <option value="" disabled>Traducción</option>
+            {traduccion.map((traduccion, index) => (
+              <option key={index} value={traduccion.code}>
+                {traduccion.name}
+              </option>
+            ))}
+          </select>
+          <input
+            type="text"
+            className="form-control me-2"
+            placeholder="Palabra"
+            style={{ width: 'auto' }}
+            value={word || ""}
+            onChange={handleWordChange}
+          />
+          <button 
+            type="submit" 
+            className="btn btn-primary"
+            onClick={() => handleSubmit(deckId)}>
+            +
+          </button>
+        </div>
       </div>
       <div className="row flex-grow-1" style={{ marginLeft: '-0.5rem' }}>
         {flashcards.map(flashcard => (
@@ -139,6 +182,8 @@ export  function FlashCards() {
         ))}
       </div>
     </div>
+  )}
+</div>
       );
 }
 
