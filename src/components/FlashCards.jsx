@@ -45,6 +45,19 @@ export  function FlashCards() {
     }
   };
 
+  const handleDeleteFlashcard = async (flashcardId) => {
+    try {
+      if (window.confirm('¿Estás seguro que quieres borrar la Flashcard?')) {
+        await userService.deleteFlashcard(flashcardId);
+        await fetchFlashCards();
+      } else {} 
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+
+
     const handleSubmit = async (deckId) => {
       try {
         if (!deckId || !word || !selectedLanguage || !selectedTranslation) {
@@ -175,8 +188,16 @@ export  function FlashCards() {
             <div className="card" style={{ marginLeft: '0.5rem', marginRight: '0.5rem' }}>
               <div className="card-body d-flex flex-column">
                 <h5 className="card-title">{flashcard.vocab}</h5>
-                <Link to={`/flashcards/detail/${flashcard.id}`} className="btn btn-secondary mt-auto">Detalles</Link>
+                <div className="mt-auto d-flex justify-content-between align-items-center">
+                  <Link to={`/flashcards/detail/${flashcard.id}`} className="btn btn-secondary">Detalles</Link>
+                </div>
               </div>
+              <button 
+                className="btn btn-danger position-absolute" 
+                style={{ bottom: '16px', right: '10px' }}
+                onClick={() => handleDeleteFlashcard(flashcard.id)}>
+                  Borrar
+              </button>
             </div>
           </div>
         ))}

@@ -27,7 +27,7 @@ export function UserDecks(){
 
   const handleCreateDeck = async (e) => {
     e.preventDefault();
-    if (!newDeckName) {
+    if (!newDeckName) { 
       alert("El nombre del deck no puede estar vacío");
       return;
     }
@@ -40,6 +40,18 @@ export function UserDecks(){
       alert("Error al crear el deck");
     }
   };
+
+  const handleDeleteDeck = async (deckId) => {
+    try {
+      if (window.confirm('¿Estás seguro que quieres borrar el deck? Se eliminaran consigo todas las flashcards que el deck contenga')) {
+        await userService.deleteDeck(deckId);
+        await fetchDecks();
+      } else {} 
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
 
 
   useEffect(() => {
@@ -75,6 +87,12 @@ export function UserDecks(){
                   <button className="btn btn-primary"
                     onClick={() => handleAccessFlashCard(deck.deck_id, deck.name)}>
                       Acceder al deck
+                  </button>
+                  <button 
+                    className="btn btn-danger position-absolute" 
+                    style={{ bottom: '15px', right: '10px' }}
+                    onClick={() => handleDeleteDeck(deck.deck_id)}>
+                      Borrar
                   </button>
                 </div>
               </div>

@@ -116,6 +116,24 @@ async createStory(words) {
   } catch (error) {
     throw new Error(`Error al crear la historia: ${error.message}`);
   }
+},
+
+async deleteFlashcard(flashcardId) {
+  try {
+    const response = await client.delete(`flashcards/delete/${flashcardId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error al borrar la Flashcard: ${error.message}`);
+  }
+},
+
+async deleteDeck(deckId) {
+  try {
+    const response = await client.delete(`decks/delete/${deckId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error al borrar la Flashcard: ${error.message}`);
+  }
 }
 
 
