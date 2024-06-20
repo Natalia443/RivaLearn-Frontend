@@ -115,19 +115,19 @@ export  function FlashCards() {
   
     return (
     <div className="container">
-    {historia ? (
-      <div style={{ width: '100%' }}>
-       <p style={{ fontSize: '1.5rem' }}>{historia}</p>
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <button 
-            type="button" 
-            className="btn btn-danger" 
-            onClick={handleGoBack}>
-            Volver Atrás
-          </button>
-        </div>
-      </div>
-    ) : (
+        {historia ? (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <div style={{ maxWidth: '800px' }}>
+              <p style={{ fontSize: '1.5rem' }}>"{historia}"</p>
+              <button 
+                type="button" 
+                className="btn btn-danger"
+                onClick={handleGoBack}>
+                Volver Atrás
+              </button>
+            </div>
+          </div>
+        ) : (
     <div>
       <div style={{ textAlign: 'center', margin: '20px 0' }}>
             <h2>{deckName}</h2>
@@ -188,6 +188,7 @@ export  function FlashCards() {
             <div className="card" style={{ marginLeft: '0.5rem', marginRight: '0.5rem' }}>
               <div className="card-body d-flex flex-column">
                 <h5 className="card-title">{flashcard.vocab}</h5>
+                <hr/>
                 <div className="mt-auto d-flex justify-content-between align-items-center">
                   <Link to={`/flashcards/detail/${flashcard.id}`} className="btn btn-secondary">Detalles</Link>
                 </div>
