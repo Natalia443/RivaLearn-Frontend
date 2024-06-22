@@ -2,8 +2,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const client = axios.create({
-  //baseURL: "https://rivalearn-backend.onrender.com/api/",
-  baseURL: "http://localhost:3001/api/",
+  baseURL: "https://rivalearn-backend.onrender.com/api/",
+  //baseURL: "http://localhost:3001/api/",
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
