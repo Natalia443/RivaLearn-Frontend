@@ -1,43 +1,47 @@
 import React, { useEffect, useState, useCallback } from "react";
-import userService from "../service/userService.js"; 
-import { useLocation, Link } from 'react-router-dom';
+import flashcardService from "../service/flashcardService.js"; 
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 
+export function FlashCards() {
+  const [flashcards, setFlashcards] = useState([]);
+  const [languages, setLanguages] = useState([]);
+  const [traduccion, setTraduccion] = useState([]);
+  const { state } = useLocation();
+  const deckId = state ? state.deckId : null;
+  const deckName = state ? state.deckName : null;
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState('');
+  const [selectedTranslation, setSelectedTranslation] = useState('');
+  const [word, setWord] = useState('');
+  const [historia, setHistoria] = useState(null);
+  const [editFlashcardId, setEditFlashcardId] = useState(null);
+  const [editVocab, setEditVocab] = useState('');
+  const [editVocabExample, setEditVocabExample] = useState('');
+  const [editSourceLang, setEditSourceLang] = useState('');
+  const [editTargetLang, setEditTargetLang] = useState('');
+  const navigate = useNavigate();
 
-export  function FlashCards() {
-    const [flashcards, setFlashcards] = useState([]);
-    const [languages, setLanguages] = useState([]);
-    const [traduccion, setTraduccion] = useState([]);
-    const { state  } = useLocation();
-    const deckId = state ? state.deckId : null;
-    const deckName = state ? state.deckName : null;
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [selectedLanguage, setSelectedLanguage] = useState('');
-    const [selectedTranslation, setSelectedTranslation] = useState('');
-    const [word, setWord] = useState('');
-    const [historia, setHistoria] = useState(null);
+  const handleLanguageChange = (e) => {
+    setSelectedLanguage(e.target.value);
+  };
 
-    
-    const handleLanguageChange = (e) => {
-      setSelectedLanguage(e.target.value);
-    };
+  const handleTranslationChange = (e) => {
+    setSelectedTranslation(e.target.value);
+  };
 
-    const handleTranslationChange = (e) => {
-      setSelectedTranslation(e.target.value);
-    };
+  const handleWordChange = (e) => {
+    setWord(e.target.value);
+  };
 
-    const handleWordChange = (e) => {
-      setWord(e.target.value);
-    };
+  const handleGoBack = () => {
+    setIsLoading(false);
+    setHistoria(null);
+  };
 
-    const handleGoBack = () => {
-      setHistoria(null);
-    };
-
-    
   const handleCrearHistoria = async (flashcards) => {
+    setIsLoading(true);
     try {
-      const story = await userService.createStory(flashcards);
+      const story = await flashcardService.createStory(flashcards);
       setHistoria(story);
       console.log("Historia creada:", story);
     } catch (error) {
@@ -48,7 +52,7 @@ export  function FlashCards() {
   const handleDeleteFlashcard = async (flashcardId) => {
     try {
       if (window.confirm('¿Estás seguro que quieres borrar la Flashcard?')) {
-        await userService.deleteFlashcard(flashcardId);
+        await flashcardService.deleteFlashcard(flashcardId);
         await fetchFlashCards();
       } else {} 
     } catch (error) {
@@ -56,157 +60,270 @@ export  function FlashCards() {
     }
   };
 
-
-
-    const handleSubmit = async (deckId) => {
-      try {
-        if (!deckId || !word || !selectedLanguage || !selectedTranslation) {
-          alert("Complete todos los datos");
-          return;
-        }
-        await handleCreateFlashcard(deckId,  word, selectedLanguage, selectedTranslation);
-        setWord("");
-        setSelectedLanguage("");
-        setSelectedTranslation("");
-        await fetchFlashCards();
-      } catch (error) {
-        console.error("Error al manejar el envío del formulario:", error);
-        alert("Error al crear la flashcard");
-      }
-    };
-
-    const fetchFlashCards = useCallback(async () => {
-        try {
-          const decksFlashcards = await userService.getDeckFlashCards(deckId);
-          setFlashcards(decksFlashcards);
-        } catch (error) {
-          setError(error);
-        } finally {
-          setLoading(false);
-        }
-    }, [deckId]); 
-
-    const handleCreateFlashcard = async (deckId, palabra, idioma, traduccion) => {
-      if (!deckId || !palabra || !idioma || !traduccion ) {
+  const handleSubmit = async (deckId) => {
+    try {
+      if (!deckId || !word || !selectedLanguage || !selectedTranslation) {
         alert("Complete todos los datos");
         return;
       }
-      try {
-        const newFlashcard = await userService.createFlashcard(deckId, palabra, idioma, traduccion);
-        setFlashcards([...flashcards, newFlashcard]);
-        fetchFlashCards();
-      } catch (error) {
-        alert("Error al crear la flashcard");
-      }
-    };
-  
+      await handleCreateFlashcard(deckId, word, selectedLanguage, selectedTranslation);
+      setWord("");
+      setSelectedLanguage("");
+      setSelectedTranslation("");
+      await fetchFlashCards();
+    } catch (error) {
+      console.error("Error al manejar el envío del formulario:", error);
+      alert("Error al crear la flashcard");
+    }
+  };
 
-    useEffect(() => {
-      fetch('/lang.json')
+  const fetchFlashCards = useCallback(async () => {
+    try {
+      const decksFlashcards = await flashcardService.getDeckFlashCards(deckId);
+      setFlashcards(decksFlashcards);
+    } catch (error) {
+      console.error("Error al obtener flashcards:", error);
+    }
+  }, [deckId]);
+
+  const handleCreateFlashcard = async (deckId, palabra, idioma, traduccion) => {
+    if (!deckId || !palabra || !idioma || !traduccion) {
+      alert("Complete todos los datos");
+      return;
+    }
+    try {
+      const newFlashcard = await flashcardService.createFlashcard(deckId, palabra, idioma, traduccion);
+      setFlashcards([...flashcards, newFlashcard]);
+      fetchFlashCards();
+    } catch (error) {
+      alert("Error al crear la flashcard");
+    }
+  };
+
+  const handleUpdateFlashcard = async (e, flashcardId) => {
+    e.preventDefault();
+    try {
+      await flashcardService.updateFlashcard(flashcardId, editVocab, editVocabExample, editSourceLang, editTargetLang);
+      await fetchFlashCards();
+      setEditVocab('');
+      setEditVocabExample('');
+      setEditSourceLang('');
+      setEditTargetLang('');
+      setEditFlashcardId(null);
+    } catch (error) {
+      alert("Error al editar la flashcard");
+    }
+  };
+
+  useEffect(() => {
+    fetch('/lang.json')
       .then(response => response.json())
       .then(data => setLanguages(data))
       .catch(error => console.error('Error al cargar los lenguajes:', error));
-      fetch('/lang2.json')
+    fetch('/lang2.json')
       .then(response => response.json())
       .then(data2 => setTraduccion(data2))
       .catch(error => console.error('Error al cargar los lenguajes:', error));
-      fetchFlashCards();
-    }, [fetchFlashCards]);
-  
-    return (
+    fetchFlashCards();
+  }, [fetchFlashCards]);
+
+  return (
     <div className="container">
-        {historia ? (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-            <div style={{ maxWidth: '800px' }}>
-              <p style={{ fontSize: '1.5rem' }}>"{historia}"</p>
+      {historia ? (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <div style={{ maxWidth: '800px' }}>
+            <p style={{ fontSize: '1.5rem' }}>"{historia}"</p>
+            <button 
+              type="button" 
+              className="btn btn-danger"
+              onClick={handleGoBack}>
+              Volver Atrás
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <div style={{ textAlign: 'center', margin: '20px 0' }}>
+            <h2>{deckName}</h2>
+          </div>
+          <div className="d-flex justify-content-between align-items-center mb-4 mt-2">
+            <button 
+              type="button" 
+              className="btn btn-primary me-2" 
+              onClick={() => handleCrearHistoria(flashcards)}>
+              Crear Historia
+            </button>
+            <div className="d-flex">
+              <select 
+                className="form-select me-2" 
+                style={{ width: 'auto' }}
+                value={selectedLanguage || ""}
+                onChange={handleLanguageChange}
+              >
+                <option value="" disabled>Idioma</option>
+                {languages.map((idioma, index) => (
+                  <option key={index} value={idioma.code}>
+                    {idioma.name}
+                  </option>
+                ))}
+              </select>
+              <select 
+                className="form-select me-2" 
+                style={{ width: 'auto' }}
+                value={selectedTranslation || ""}
+                onChange={handleTranslationChange}
+              >
+                <option value="" disabled>Traducción</option>
+                {traduccion.map((traduccion, index) => (
+                  <option key={index} value={traduccion.code}>
+                    {traduccion.name}
+                  </option>
+                ))}
+              </select>
+              <input
+                type="text"
+                className="form-control me-2"
+                placeholder="Palabra"
+                style={{ width: 'auto' }}
+                value={word || ""}
+                onChange={handleWordChange}
+              />
               <button 
-                type="button" 
-                className="btn btn-danger"
-                onClick={handleGoBack}>
-                Volver Atrás
+                type="submit" 
+                className="btn btn-primary"
+                onClick={() => handleSubmit(deckId)}>
+                +
               </button>
             </div>
           </div>
-        ) : (
-    <div>
-      <div style={{ textAlign: 'center', margin: '20px 0' }}>
-            <h2>{deckName}</h2>
-      </div>
-      <div className="d-flex justify-content-between align-items-center mb-4 mt-2">
-        <button 
-          type="button" 
-          className="btn btn-primary me-2" 
-          onClick={() => handleCrearHistoria(flashcards)}>
-          Crear Historia
-        </button>
-        <div className="d-flex">
-          <select 
-            className="form-select me-2" 
-            style={{ width: 'auto' }}
-            value={selectedLanguage || ""}
-            onChange={handleLanguageChange}
-          >
-            <option value="" disabled>Idioma</option>
-            {languages.map((idioma, index) => (
-              <option key={index} value={idioma.code}>
-                {idioma.name}
-              </option>
-            ))}
-          </select>
-          <select 
-            className="form-select me-2" 
-            style={{ width: 'auto' }}
-            value={selectedTranslation || ""}
-            onChange={handleTranslationChange}
-          >
-            <option value="" disabled>Traducción</option>
-            {traduccion.map((traduccion, index) => (
-              <option key={index} value={traduccion.code}>
-                {traduccion.name}
-              </option>
-            ))}
-          </select>
-          <input
-            type="text"
-            className="form-control me-2"
-            placeholder="Palabra"
-            style={{ width: 'auto' }}
-            value={word || ""}
-            onChange={handleWordChange}
-          />
-          <button 
-            type="submit" 
-            className="btn btn-primary"
-            onClick={() => handleSubmit(deckId)}>
-            +
-          </button>
-        </div>
-      </div>
-      <div className="row flex-grow-1" style={{ marginLeft: '-0.5rem' }}>
-        {flashcards.map(flashcard => (
-          <div key={flashcard.id} className="col-md-4 mb-3">
-            <div className="card" style={{ marginLeft: '0.5rem', marginRight: '0.5rem' }}>
-              <div className="card-body d-flex flex-column">
-                <h5 className="card-title">{flashcard.vocab}</h5>
-                <hr/>
-                <div className="mt-auto d-flex justify-content-between align-items-center">
-                  <Link to={`/flashcards/detail/${flashcard.id}`} className="btn btn-secondary">Detalles</Link>
+          {isLoading && ( 
+            <div className="progress my-2" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+              <div className="progress-bar progress-bar-striped progress-bar-animated" style={{ width: '100%' }}></div>
+            </div>
+          )}
+          <div className="row flex-grow-1">
+            {flashcards.map((flashcard, index) => (
+              <div key={flashcard.id} className="col-md-4 mb-3">
+                <div className="card">
+                  <div className="card-body d-flex flex-column">
+                    <h5 className="card-title">{flashcard.vocab}</h5>
+                    <hr/>
+                    <div className="mt-auto">
+                      <Link to={`/flashcards/detail/${flashcard.id}`} className="btn btn-primary me-2">
+                        Detalles
+                      </Link>
+                      <button
+                        className="btn btn-secondary mx-3"
+                        data-bs-toggle="modal"
+                        data-bs-target={`#exampleModal${index}`}
+                        onClick={() => {
+                          setEditFlashcardId(flashcard.id);
+                          setEditVocab(flashcard.vocab);
+                          setEditVocabExample(flashcard.vocab_example);
+                          setEditSourceLang(flashcard.source_lang);
+                          setEditTargetLang(flashcard.target_lang);
+                        }}>
+                        Editar
+                      </button>
+                      <button 
+                        className="btn btn-danger"
+                        onClick={() => handleDeleteFlashcard(flashcard.id)}>
+                        Borrar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  key={flashcard.id}
+                  className="modal fade"
+                  id={`exampleModal${index}`}
+                  tabIndex="-1"
+                  aria-labelledby={`exampleModalLabel${index}`}
+                  aria-hidden="true"
+                >
+                  <div className="modal-dialog">
+                    <div className="modal-content">
+                      <div className="modal-header">
+                        <h5 className="modal-title" id={`exampleModalLabel${index}`}>
+                          Editar Flashcard
+                        </h5>
+                        <button
+                          type="button"
+                          className="btn-close"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div className="modal-body">
+                        <form onSubmit={(e) => handleUpdateFlashcard(e, flashcard.id)}>
+                          <div className="mb-3">
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="editVocab"
+                              value={editVocab}
+                              onChange={(e) => setEditVocab(e.target.value)}
+                              required
+                            />
+                          </div>
+                          <div className="mb-3">
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="editVocabExample"
+                              value={editVocabExample}
+                              onChange={(e) => setEditVocabExample(e.target.value)}
+                            />
+                          </div>
+                          <div className="d-flex flex-grow-1">
+                          <select 
+                              className="form-select me-2" 
+                              style={{ width: 'auto' }}
+                              id="editSourceLang"
+                              value={editSourceLang}
+                              onChange={(e) => setEditSourceLang(e.target.value)}
+                              required
+                            >
+                              <option value="" disabled>Idioma</option>
+                              {languages.map((idioma, index) => (
+                                <option key={index} value={idioma.code}>
+                                  {idioma.name}
+                                </option>
+                              ))}
+                            </select>          
+                            <select 
+                              className="form-select me-2" 
+                              style={{ width: 'auto' }}
+                              id="editTargetLang"
+                              value={editTargetLang}
+                              onChange={(e) => setEditTargetLang(e.target.value)}
+                              required
+                            >
+                              <option value="" disabled>Traducción</option>
+                              {traduccion.map((traduccion, index) => (
+                                <option key={index} value={traduccion.code}>
+                                  {traduccion.name}
+                              </option>
+                           ))}
+                          </select>    
+                          </div>                              
+                          <div className="modal-footer my-2">
+                            <button type="submit" data-bs-dismiss="modal" className="btn btn-primary">
+                              Guardar  
+                            </button>    
+                          </div>      
+                        </form>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <button 
-                className="btn btn-danger position-absolute" 
-                style={{ bottom: '16px', right: '10px' }}
-                onClick={() => handleDeleteFlashcard(flashcard.id)}>
-                  Borrar
-              </button>
-            </div>
+            ))}
+            
           </div>
-        ))}
-      </div>
+          <button className="btn btn-danger" onClick={() => navigate('/Decks')}>Volver a decks</button>
+        </div>
+      )}
     </div>
-  )}
-</div>
-      );
+  );
 }
-
-export default FlashCards;

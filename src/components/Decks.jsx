@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
-import userService from "../service/userService.js"; 
+import React, { useState, useEffect } from "react";
+import deckService from "../service/deckService.js";
 import { useNavigate } from "react-router-dom";
 
-
-export function UserDecks(){
+export function UserDecks() {
   const [decks, setDecks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [newDeckName, setNewDeckName] = useState(null);
+  const [updatedDeckName, setUpdatedDeckName] = useState(null);
   const navigate = useNavigate();
 
   const fetchDecks = async () => {
     try {
-      const userDecks = await userService.getUserDecks();
+      const userDecks = await deckService.getUserDecks();
       setDecks(userDecks);
     } catch (error) {
       setError(error);
@@ -21,18 +21,18 @@ export function UserDecks(){
     }
   };
 
-  const handleAccessFlashCard = (deckId, deckName) =>{
-    navigate('/flashcards', { state : { deckId, deckName } });
+  const handleAccessFlashCard = (deckId, deckName) => {
+    navigate('/flashcards', { state: { deckId, deckName } });
   };
 
   const handleCreateDeck = async (e) => {
     e.preventDefault();
-    if (!newDeckName) { 
+    if (!newDeckName) {
       alert("El nombre del deck no puede estar vacío");
       return;
     }
     try {
-      const newDeck = await userService.createDeck(newDeckName);
+      const newDeck = await deckService.createDeck(newDeckName);
       setDecks([...decks, newDeck]);
       setNewDeckName("");
       fetchDecks();
@@ -44,15 +44,24 @@ export function UserDecks(){
   const handleDeleteDeck = async (deckId) => {
     try {
       if (window.confirm('¿Estás seguro que quieres borrar el deck? Se eliminaran consigo todas las flashcards que el deck contenga')) {
-        await userService.deleteDeck(deckId);
+        await deckService.deleteDeck(deckId);
         await fetchDecks();
-      } else {} 
+      } else {}
     } catch (error) {
       console.error(error.message);
     }
   };
 
-
+  const handleUpdateDeck = async (e, deckId) => {
+    e.preventDefault();
+    try {
+      await deckService.updateDeck(deckId, updatedDeckName);
+      await fetchDecks();
+      setUpdatedDeckName("");
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
 
   useEffect(() => {
     fetchDecks();
@@ -64,10 +73,10 @@ export function UserDecks(){
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h1>Mis Decks</h1>
           <form className="d-flex" onSubmit={handleCreateDeck}>
-            <input 
-              type="text" 
-              className="form-control mr-2" 
-              placeholder="Nombre nuevo deck" 
+            <input
+              type="text"
+              className="form-control mr-2"
+              placeholder="Nombre nuevo deck"
               value={newDeckName}
               onChange={(e) => setNewDeckName(e.target.value)}
             />
@@ -97,41 +106,54 @@ export function UserDecks(){
       </div>
     );
   }
-    if (error) return <div>Error: {error}</div>;
 
-  
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <div className="container-fluid d-flex flex-column">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h1>Mis Decks</h1>
         <form className="d-flex" onSubmit={handleCreateDeck}>
-          <input 
-            type="text" 
-            className="form-control mr-2" 
-            placeholder="Nombre nuevo deck" 
+          <input
+            type="text"
+            className="form-control mr-2"
+            placeholder="Nombre nuevo deck"
             value={newDeckName}
             onChange={(e) => setNewDeckName(e.target.value)}
           />
-          <button type="submit" className="btn btn-primary mx1">+</button>
+          <button type="submit" className="btn btn-primary mx-1">+</button>
         </form>
       </div>
       <div className="row flex-grow-1">
-        {decks.map(deck => (
+        {decks.map((deck, index) => (
           <div key={deck.deck_id} className="col-md-4 mb-3">
             <div className="card">
               <div className="card-body d-flex flex-column">
                 <h5 className="card-title">{deck.name}</h5>
-                <hr/>
+                <hr />
                 <div className="mt-auto">
                   <button className="btn btn-primary"
                     onClick={() => handleAccessFlashCard(deck.deck_id, deck.name)}>
-                      Acceder al deck
+                    Acceder al deck
                   </button>
-                  <button 
-                    className="btn btn-danger mx-3" 
+                  <button
+                    className="btn btn-success ms-3"
                     style={{ bottom: '15px', right: '10px' }}
                     onClick={() => handleDeleteDeck(deck.deck_id)}>
-                      Borrar
+                    Practicar
+                  </button>
+                  <button
+                    className="btn btn-secondary mx-3"
+                    style={{ bottom: '15px', right: '10px' }}
+                    data-bs-toggle="modal"
+                    data-bs-target={`#exampleModal${index}`}>
+                    Editar
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    style={{ bottom: '15px', right: '10px' }}
+                    onClick={() => handleDeleteDeck(deck.deck_id)}>
+                    Borrar
                   </button>
                 </div>
               </div>
@@ -139,6 +161,52 @@ export function UserDecks(){
           </div>
         ))}
       </div>
+
+      {decks.map((deck, index) => (
+        <div
+          key={deck.deck_id}
+          className="modal fade"
+          id={`exampleModal${index}`}
+          tabIndex="-1"
+          aria-labelledby={`exampleModalLabel${index}`}
+          aria-hidden="true"
+        >
+        <form onSubmit={(e) => handleUpdateDeck(e, deck.deck_id)}>
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h1 className="modal-title fs-5" id={`exampleModalLabel${index}`}>
+                  Editar nombre del deck "{deck.name}"
+                </h1>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body">
+            
+            <input
+              type="text"
+              className="form-control mr-2"
+              placeholder="Nombre"
+              value={updatedDeckName}
+              onChange={(e) => setUpdatedDeckName(e.target.value)}
+              required
+            />
+              </div>
+              <div className="modal-footer">
+                <button type="submit" data-bs-dismiss="modal" className="btn btn-primary">
+                  Guardar
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+        </div>
+        
+      ))}
     </div>
   );
 }

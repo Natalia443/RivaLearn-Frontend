@@ -1,7 +1,7 @@
 import React, { useEffect, useState} from 'react';
 import { useNavigate } from "react-router-dom";
 import { useParams } from 'react-router-dom';
-import userService from '../service/userService.js';
+import flashcardService from '../service/flashcardService.js';
 
 const DetalleFlashcard = () => {
   const { id } = useParams();
@@ -14,7 +14,7 @@ const DetalleFlashcard = () => {
     console.log('ID de la flashcard:', id);
     const fetchFlashcard = async () => {
       try {
-        const fetchedFlashcard = await userService.getFlashcardById(id);
+        const fetchedFlashcard = await flashcardService.getFlashcardById(id);
         setFlashcard(fetchedFlashcard);
       } catch (error) {
         setError(error);

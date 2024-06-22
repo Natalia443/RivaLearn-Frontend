@@ -40,7 +40,7 @@ export function Home({ setUser }) {
   
       <div className='row g-0'>
         {options.length === 0 ? (
-        [...Array(3)].map((_, index) => (
+        [...Array(5)].map((_, index) => (
           <div key={index} className="card mb-3 mx-4" style={{ maxWidth: "540px" }}>
             <div className="row g-0">
               <div className="col-md-4">

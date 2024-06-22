@@ -16,5 +16,17 @@
     "summary": "Busca palabras que no entiendas en su idioma para obtener un contexto.",
     "img": "./src/assets/img/dictionary.png",
     "navigate": "/Diccionario"
+  },
+  {
+    "name": "Textos Personalizados",
+    "summary": "Subí un PDF para leer.",
+    "img": "./src/assets/img/ebook.png",
+    "navigate": "/LeerPDF"
+  },
+  {
+    "name": "Chat IA",
+    "summary": "Chateá con nuestro asistente IA.",
+    "img": "./src/assets/img/ai.png",
+    "navigate": "/Chat"
   }
 ]
