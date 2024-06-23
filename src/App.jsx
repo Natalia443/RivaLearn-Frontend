@@ -6,6 +6,7 @@ import { Home } from './components/Home';
 import { Registro } from './components/Registro';
 import { Diccionario } from './components/Diccionario';
 import TextosPredet from './components/TextosPredet';
+import TextosPDF from './components/TextosPDF'
 import Decks from './components/Decks';
 import { FlashCards } from './components/FlashCards.jsx';
 import DetalleFlashcard from './components/DetalleFlashcard';
@@ -35,6 +36,7 @@ function App() {
           <Route path="/Decks" element={<Decks />} />
           <Route path="/flashcards" element={<FlashCards />} />
           <Route path="/flashcards/detail/:id" element={<DetalleFlashcard />} />
+          <Route path="/LeerPDF" element={<TextosPDF />} />
         </Routes>
       </Router>
     </div>

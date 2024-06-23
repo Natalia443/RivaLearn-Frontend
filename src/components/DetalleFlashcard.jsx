@@ -11,7 +11,6 @@ const DetalleFlashcard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('ID de la flashcard:', id);
     const fetchFlashcard = async () => {
       try {
         const fetchedFlashcard = await flashcardService.getFlashcardById(id);

@@ -35,7 +35,6 @@ export default {
       const expiryDate = new Date(expiry_date);
       Cookies.set("access_token", access_token, { expires: 1 / 24 });
       Cookies.set("refresh_token", refresh_token, { expires: expiryDate });
-      console.log(expiryDate);
       Cookies.set("username", username);
       Cookies.set("user_id", user_id);
       return { username: username };

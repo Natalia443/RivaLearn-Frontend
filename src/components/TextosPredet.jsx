@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import VistaTextos from "./VistaTextos";
+import ProgressBar from "./common/loading"; 
 
 const TextosPredet = () => {
   const [data, setData] = useState(null);
@@ -22,7 +23,6 @@ const TextosPredet = () => {
       .then(response => response.json())
       .then(data => {
         setData(data);
-        console.log('Respuesta de la API:', data);
       })
       .catch(error => console.error('Error al realizar la solicitud a la API:', error));
   };
@@ -42,11 +42,7 @@ const TextosPredet = () => {
       ) : (
         <>
           <h1 className="mb-4">Selecciona un idioma para leer</h1>
-          {isLoading && ( 
-            <div className="progress my-2" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-              <div className="progress-bar progress-bar-striped progress-bar-animated" style={{ width: '100%' }}></div>
-            </div>
-          )}
+          <ProgressBar isLoading={isLoading} />
           <div className="row">
             {languages.map((language) => (
               <div key={language.code} className="col-md-3 mb-4">

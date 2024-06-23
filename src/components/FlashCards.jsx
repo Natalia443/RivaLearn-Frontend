@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useCallback } from "react";
 import flashcardService from "../service/flashcardService.js"; 
 import { useLocation, Link, useNavigate } from 'react-router-dom';
+import ProgressBar from "./common/loading"; 
+import LanguageDropdowns from "./common/langDropdown"; 
+
 
 export function FlashCards() {
   const [flashcards, setFlashcards] = useState([]);
-  const [languages, setLanguages] = useState([]);
-  const [traduccion, setTraduccion] = useState([]);
   const { state } = useLocation();
   const deckId = state ? state.deckId : null;
   const deckName = state ? state.deckName : null;
@@ -43,7 +44,6 @@ export function FlashCards() {
     try {
       const story = await flashcardService.createStory(flashcards);
       setHistoria(story);
-      console.log("Historia creada:", story);
     } catch (error) {
       console.error(error.message);
     }
@@ -116,14 +116,6 @@ export function FlashCards() {
   };
 
   useEffect(() => {
-    fetch('/lang.json')
-      .then(response => response.json())
-      .then(data => setLanguages(data))
-      .catch(error => console.error('Error al cargar los lenguajes:', error));
-    fetch('/lang2.json')
-      .then(response => response.json())
-      .then(data2 => setTraduccion(data2))
-      .catch(error => console.error('Error al cargar los lenguajes:', error));
     fetchFlashCards();
   }, [fetchFlashCards]);
 
@@ -154,32 +146,12 @@ export function FlashCards() {
               Crear Historia
             </button>
             <div className="d-flex">
-              <select 
-                className="form-select me-2" 
-                style={{ width: 'auto' }}
-                value={selectedLanguage || ""}
-                onChange={handleLanguageChange}
-              >
-                <option value="" disabled>Idioma</option>
-                {languages.map((idioma, index) => (
-                  <option key={index} value={idioma.code}>
-                    {idioma.name}
-                  </option>
-                ))}
-              </select>
-              <select 
-                className="form-select me-2" 
-                style={{ width: 'auto' }}
-                value={selectedTranslation || ""}
-                onChange={handleTranslationChange}
-              >
-                <option value="" disabled>Traducción</option>
-                {traduccion.map((traduccion, index) => (
-                  <option key={index} value={traduccion.code}>
-                    {traduccion.name}
-                  </option>
-                ))}
-              </select>
+              <LanguageDropdowns
+                selectedLanguage={selectedLanguage}
+                selectedTranslation={selectedTranslation}
+                handleLanguageChange={handleLanguageChange}
+                handleTranslationChange={handleTranslationChange}
+              />
               <input
                 type="text"
                 className="form-control me-2"
@@ -196,11 +168,7 @@ export function FlashCards() {
               </button>
             </div>
           </div>
-          {isLoading && ( 
-            <div className="progress my-2" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-              <div className="progress-bar progress-bar-striped progress-bar-animated" style={{ width: '100%' }}></div>
-            </div>
-          )}
+          <ProgressBar isLoading={isLoading} />
           <div className="row flex-grow-1">
             {flashcards.map((flashcard, index) => (
               <div key={flashcard.id} className="col-md-4 mb-3">
@@ -276,37 +244,13 @@ export function FlashCards() {
                             />
                           </div>
                           <div className="d-flex flex-grow-1">
-                          <select 
-                              className="form-select me-2" 
-                              style={{ width: 'auto' }}
-                              id="editSourceLang"
-                              value={editSourceLang}
-                              onChange={(e) => setEditSourceLang(e.target.value)}
-                              required
-                            >
-                              <option value="" disabled>Idioma</option>
-                              {languages.map((idioma, index) => (
-                                <option key={index} value={idioma.code}>
-                                  {idioma.name}
-                                </option>
-                              ))}
-                            </select>          
-                            <select 
-                              className="form-select me-2" 
-                              style={{ width: 'auto' }}
-                              id="editTargetLang"
-                              value={editTargetLang}
-                              onChange={(e) => setEditTargetLang(e.target.value)}
-                              required
-                            >
-                              <option value="" disabled>Traducción</option>
-                              {traduccion.map((traduccion, index) => (
-                                <option key={index} value={traduccion.code}>
-                                  {traduccion.name}
-                              </option>
-                           ))}
-                          </select>    
-                          </div>                              
+                            <LanguageDropdowns
+                              selectedLanguage={editSourceLang}
+                              selectedTranslation={editTargetLang}
+                              handleLanguageChange={(e) => setEditSourceLang(e.target.value)}
+                              handleTranslationChange={(e) => setEditTargetLang(e.target.value)}
+                            />
+                          </div>                                 
                           <div className="modal-footer my-2">
                             <button type="submit" data-bs-dismiss="modal" className="btn btn-primary">
                               Guardar  

@@ -13,7 +13,6 @@ export function LoginForm({ setUser }) {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
-  console.log('Valor de autenticado desde el contexto:', autenticado);
 
   useEffect(() => {
     const accessToken = Cookies.get("access_token");
@@ -25,7 +24,6 @@ export function LoginForm({ setUser }) {
     }
 
   
-    console.log('useEffect - Valor de autenticado desde el contexto:', autenticado);
   }, [navigate, setUser, autenticado]);
 
   const handleSubmit = async (e) => {
