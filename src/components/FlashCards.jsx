@@ -126,8 +126,8 @@ export function FlashCards() {
   return (
     <div className="container">
       {historia ? (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-          <div style={{ maxWidth: '800px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+          <div className="my-2">
             <p style={{ fontSize: '1.5rem' }}>"{historia}"</p>
             <button 
               type="button" 
