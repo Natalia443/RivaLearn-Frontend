@@ -10,6 +10,9 @@ import TextosPDF from './components/TextosPDF'
 import Decks from './components/Decks';
 import { FlashCards } from './components/FlashCards.jsx';
 import DetalleFlashcard from './components/DetalleFlashcard';
+import Chat from './components/Chat';
+import Quiz from './components/Quiz';
+import Stats from './components/Stats';
 
 function App() {
   const [user, setUser] = useState([]);
@@ -37,6 +40,9 @@ function App() {
           <Route path="/flashcards" element={<FlashCards />} />
           <Route path="/flashcards/detail/:id" element={<DetalleFlashcard />} />
           <Route path="/LeerPDF" element={<TextosPDF />} />
+          <Route path="/Chat" element={<Chat />} />
+          <Route path="/Quiz" element={<Quiz />} />
+          <Route path="/Stats" element={<Stats />} />
         </Routes>
       </Router>
     </div>

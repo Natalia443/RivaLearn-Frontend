@@ -115,6 +115,10 @@ export function FlashCards() {
     }
   };
 
+  const handleQuiz = async () => {
+    navigate('/Quiz', { state: { flashcards } });
+  }
+
   useEffect(() => {
     fetchFlashCards();
   }, [fetchFlashCards]);
@@ -144,6 +148,12 @@ export function FlashCards() {
               className="btn btn-primary me-2" 
               onClick={() => handleCrearHistoria(flashcards)}>
               Crear Historia
+            </button>
+            <button
+              className="btn btn-success ms-3"
+              style={{ bottom: '15px', right: '10px' }}
+              onClick={() => handleQuiz()}>
+              Practicar
             </button>
             <div className="d-flex">
               <LanguageDropdowns

@@ -137,12 +137,6 @@ export function UserDecks() {
                     Acceder al deck
                   </button>
                   <button
-                    className="btn btn-success ms-3"
-                    style={{ bottom: '15px', right: '10px' }}
-                    onClick={() => handleDeleteDeck(deck.deck_id)}>
-                    Practicar
-                  </button>
-                  <button
                     className="btn btn-secondary mx-3"
                     style={{ bottom: '15px', right: '10px' }}
                     data-bs-toggle="modal"
