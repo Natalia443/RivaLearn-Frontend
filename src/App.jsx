@@ -13,6 +13,7 @@ import DetalleFlashcard from './components/DetalleFlashcard';
 import Chat from './components/Chat';
 import Quiz from './components/Quiz';
 import Stats from './components/Stats';
+import LandingPage from './components/Landing';
 
 function App() {
   const [user, setUser] = useState([]);
@@ -43,6 +44,7 @@ function App() {
           <Route path="/Chat" element={<Chat />} />
           <Route path="/Quiz" element={<Quiz />} />
           <Route path="/Stats" element={<Stats />} />
+          <Route path="/Landing" element={<LandingPage />} />
         </Routes>
       </Router>
     </div>
