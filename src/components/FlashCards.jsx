@@ -40,6 +40,10 @@ export function FlashCards() {
   };
 
   const handleCrearHistoria = async (flashcards) => {
+    if (!flashcards || flashcards.length === 0) {
+      alert("Aún no tienes flashcards");
+      return;
+    }
     setIsLoading(true);
     try {
       const story = await flashcardService.createStory(flashcards);
@@ -116,6 +120,10 @@ export function FlashCards() {
   };
 
   const handleQuiz = async () => {
+    if (!flashcards || flashcards.length === 0) {
+      alert("Aún no tienes flashcards");
+      return;
+    }
     navigate('/Quiz', { state: { flashcards } });
   }
 
