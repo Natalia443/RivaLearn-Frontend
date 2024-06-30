@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import userService from '../service/userService';
+import { useNavigate } from 'react-router-dom';
 
 export function Registro() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
       await userService.saveUser(username, password, email);
+      navigate("/")
     } catch (error) {
       console.error('Error saving user:', error);
     }
