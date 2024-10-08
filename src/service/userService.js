@@ -20,7 +20,7 @@ export default {
       });
       return user;
     } catch (error) {
-      throw "Error al guardar el usuario";
+      throw `Error al guardar el usuario: ${error}`;
     }
   },
 
